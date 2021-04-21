@@ -29,4 +29,13 @@ class CMSTest < MiniTest::Test
     assert_includes(last_response.body, "The lich is, perhaps, the single most powerful form of undead known to exist.")
   end
   
+  def test_no_file
+    get '/dragon.txt'
+    assert_equal(302, last_response.status)
+    
+    get last_response["Location"]
+    assert_equal(200, last_response.status)
+    assert_includes(last_response.body, "dragon.txt does not exist.")
+  end
+  
 end
