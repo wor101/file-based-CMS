@@ -3,6 +3,9 @@
 <% end %>
 <ul>
   <% @files.each do |file| %>
-    <li><a href="<%= file[:name] %>"><%= file[:name] %></a></li>
+    <li>
+      <a href="<%= file[:name] %>"><%= file[:name] %> </a>
+      <a href="<%= file[:name] %>/edit">Edit</a>
+    </li>
   <% end %>
 </ul>
