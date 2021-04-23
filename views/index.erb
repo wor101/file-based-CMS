@@ -4,6 +4,9 @@
 <% if session[:success] %>
   <h3><%= session.delete(:success) %></h3>
 <% end %>
+<% if session[:data_path] %>
+  <h3><%= session.delete(:data_path) %></h3>
+<% end %>
 
 <ul>
   <% @files.each do |file| %>
