@@ -43,18 +43,35 @@ get '/:file_name' do
     session[:error] = "#{file_name} does not exist."
     redirect '/'
   end
+end
+
+get '/:file_name/edit' do
+  file_name = params[:file_name]
+  file_path = root + "/data/" + file_name
   
-=begin
-  if Dir.children(root + "/data/").none?(file_name)
+  if File.exist?(file_path)
+    @content = load_file(file_path)
+    
+    erb :edit, layout: :layout
+  else
     session[:error] = "#{file_name} does not exist."
     redirect '/'
-  elsif file_name[-3..-1] == '.md'
-    render_markdown(load_file(file_name))
-  else
-    # headers["Content-Type"] = "text/plain" # this will tell page to display everything as txt (already using erb template so no point)
-    @file_data = load_file(file_name)
-    erb :content, layou: :layout
   end
-=end
+end
+
+post '/:file_name/update' do
+  file_name = params[:file_name]
+  file_path = root + "/data/" + file_name
+
+  if File.exist?(file_path)
+    File.open(file_path, "w") { |f| f.write params[:edit_content] }
+
+    session[:success] = "#{file_name} has been updated."
+    redirect '/'
+  else
+    session[:error] = "#{file_name} does not exist."
+    redirect '/'
+  end  
+  
 
 end
