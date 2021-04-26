@@ -89,4 +89,36 @@ class CMSTest < MiniTest::Test
     assert_includes(last_response.body, 'New pahty content')
   end
   
+  def test_new_document
+    get '/new_document'
+    assert_equal(200, last_response.status)
+    assert_includes(last_response.body, 'Add a new document:')
+  end
+  
+  def test_add_document_without_name
+    post '/new_document', name_document: ''
+    assert_equal(302, last_response.status)
+    
+    get last_response["Location"]
+    assert_equal(200, last_response.status)
+    assert_includes(last_response.body, "A name is required.")
+  end
+  
+  def test_add_document_with_invalid_file_type
+    post '/new_document', name_document: 'no_file_type'
+    assert_equal(302, last_response.status)
+    
+    get last_response["Location"]
+    assert_equal(200, last_response.status)
+    assert_includes(last_response.body, "File name must end in .txt or .md")
+  end
+  
+  def test_add_valid_document
+    post '/new_document', name_document: 'valid_doc.md'
+    assert_equal(302, last_response.status)
+
+    get last_response["Location"]
+    assert_equal(200, last_response.status)
+    assert_includes(last_response.body, ">valid_doc.md </a>")
+  end
 end

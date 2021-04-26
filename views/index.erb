@@ -1,18 +1,14 @@
-<% if session[:error] %>
-  <h3 class="message"><%= session.delete(:error) %></h3>
-<% end %>
-<% if session[:success] %>
-  <h3 class="message"><%= session.delete(:success) %></h3>
-<% end %>
-<% if session[:data_path] %>
-  <h3 class="message"><%= session.delete(:data_path) %></h3>
+<% if session[:message] %>
+  <h3 class="message"><%= session.delete(:message) %></h3>
 <% end %>
 
 <ul>
-  <% @files.each do |file| %>
+  <% @file_names.each do |file| %>
     <li>
-      <a href="<%= file[:name] %>"><%= file[:name] %> </a>
-      <a href="<%= file[:name] %>/edit">Edit</a>
+      <a href="<%= file %>"><%= file %> </a>
+      <a href="<%= file %>/edit">Edit</a>
     </li>
   <% end %>
 </ul>
+<br>
+<a href="new_document">New Document</a>

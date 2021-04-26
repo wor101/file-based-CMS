@@ -1,0 +1,9 @@
+<% if session[:message] %>
+  <h3 class="message"><%= session.delete(:message) %></h3>
+<% end %>
+
+<form action="new_document" method="post">
+  <label for="new_document">Add a new document:</label><br>
+  <textarea id="name_document" name="name_document" rows="1" cols="25"></textarea>
+  <button type="submit">Create</button>
+</form>

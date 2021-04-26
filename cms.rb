@@ -34,23 +34,38 @@ def data_path
   end
 end
 
+def valid_doc_name?(doc_name)
+  if doc_name.empty?
+    session[:message] = "A name is required."
+    false
+  elsif ['.txt', '.md'].none?(File.extname(doc_name))
+    session[:message] = "File name must end in .txt or .md"
+    false
+  else
+    true
+  end
+end
+
 get '/' do
   @file_names = Dir.children(data_path)
-  @files = @file_names.map { |file_name| { name: file_name, data: File.new("data/#{file_name}") } }
+  #@files = @file_names.map { |file_name| { name: file_name, data: File.new("data/#{file_name}") } }
   
   erb :index, layout: :layout
+end
+
+get '/new_document' do
+  
+  erb :new_document, layout: :layout
 end
 
 get '/:file_name' do
   file_name = params[:file_name]
   file_path = File.join(data_path, file_name)
-  session[:data_path] = File.join(data_path, file_name)
-  
-  
+
   if File.exist?(file_path)
     load_file(file_path)
   else
-    session[:error] = "#{file_name} does not exist."
+    session[:message] = "#{file_name} does not exist."
     redirect '/'
   end
 end
@@ -64,7 +79,19 @@ get '/:file_name/edit' do
     
     erb :edit, layout: :layout
   else
-    session[:error] = "#{file_name} does not exist."
+    session[:message] = "#{file_name} does not exist."
+    redirect '/'
+  end
+end
+
+post '/new_document' do
+  doc_name = params[:name_document].strip
+  
+  if valid_doc_name?(doc_name) == false
+    redirect 'new_document'
+  else
+    File.new("#{data_path}/" + "#{doc_name}", 'w')
+    session[:message] = "#{doc_name} was created."
     redirect '/'
   end
 end
@@ -76,12 +103,11 @@ post '/:file_name/update' do
   if File.exist?(file_path)
     File.open(file_path, "w") { |f| f.write params[:edit_content] }
 
-    session[:success] = "#{file_name} has been updated."
+    session[:message] = "#{file_name} has been updated."
     redirect '/'
   else
-    session[:error] = "#{file_name} does not exist."
+    session[:message] = "#{file_name} does not exist."
     redirect '/'
   end  
-  
 
 end
