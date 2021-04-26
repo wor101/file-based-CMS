@@ -109,5 +109,20 @@ post '/:file_name/update' do
     session[:message] = "#{file_name} does not exist."
     redirect '/'
   end  
+end
 
+post '/:file_name/delete' do
+  file_name = params[:file_name]
+  file_path = File.join(data_path, file_name)
+  
+  if File.exist?(file_path)
+    File.delete(file_path)
+    
+    session[:message] = "#{file_name} has been deleted."
+    redirect '/'
+  else
+    session[:message] = "#{file_name} does not exist."
+    redirect '/'
+  end  
+  
 end

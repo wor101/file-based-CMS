@@ -121,4 +121,17 @@ class CMSTest < MiniTest::Test
     assert_equal(200, last_response.status)
     assert_includes(last_response.body, ">valid_doc.md </a>")
   end
+  
+  def test_delete
+    create_document("doc_to_delete.md")
+    
+    post 'doc_to_delete.md/delete' 
+    assert_equal(302, last_response.status)
+    
+    get last_response["Location"]
+    assert_includes(last_response.body, "doc_to_delete.md has been deleted.")
+    
+    get '/'
+    refute_includes(last_response.body, "doc_to_delete.md")
+  end
 end
