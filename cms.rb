@@ -48,8 +48,7 @@ end
 
 get '/' do
   @file_names = Dir.children(data_path)
-  #@files = @file_names.map { |file_name| { name: file_name, data: File.new("data/#{file_name}") } }
-  
+
   erb :index, layout: :layout
 end
 
@@ -84,6 +83,18 @@ get '/:file_name/edit' do
   end
 end
 
+get '/users/signin' do
+  
+  erb :signin, layout: :layout
+end
+
+get '/users/signout' do
+  session[:username] = nil
+  session[:signed_in] = false
+  session[:message] = "You have been signed out."
+  redirect '/'
+end
+
 post '/new_document' do
   doc_name = params[:name_document].strip
   
@@ -93,6 +104,21 @@ post '/new_document' do
     File.new("#{data_path}/" + "#{doc_name}", 'w')
     session[:message] = "#{doc_name} was created."
     redirect '/'
+  end
+end
+
+post '/users/signin' do
+  if params[:username] == 'admin' && params[:password] == 'secret'
+    session[:username] = params[:username]
+    session[:signed_in] = true
+    
+    session[:message] = 'Welcome!'
+    redirect '/'
+  else
+    session[:temp_user] = params[:username]
+    session[:message] = "Invalid Credentials"
+    status 422
+    erb :signin
   end
 end
 
@@ -123,6 +149,6 @@ post '/:file_name/delete' do
   else
     session[:message] = "#{file_name} does not exist."
     redirect '/'
-  end  
-  
+  end 
 end
+

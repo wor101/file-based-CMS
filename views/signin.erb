@@ -1,0 +1,13 @@
+<% if session[:message] %>
+  <h3 class="message"><%= session.delete(:message) %></h3>
+<% end %>
+
+<form action="signin" method="post">
+  <label for="username">Username:</label>
+  <textarea id="username" name="username" rows="1" cols="25"><%= session.delete(:temp_user) %></textarea>
+  <br>
+  <label for="password">Password:</label>
+  <textarea id="password" name="password" rows="1" cols="25"></textarea>
+  <br>
+  <button type="submit">Sign In</button>
+</form>

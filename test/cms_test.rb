@@ -134,4 +134,38 @@ class CMSTest < MiniTest::Test
     get '/'
     refute_includes(last_response.body, "doc_to_delete.md")
   end
+  
+  def test_sign_in_button
+    get '/users/signin'
+    assert_equal(200, last_response.status)
+    assert_includes(last_response.body, 'Username:')
+  end
+  
+  def test_signin_bad_credentials
+    post '/users/signin', username: 'bad_user', password: 'bad_pass'
+    assert_equal(422, last_response.status)
+    assert_includes(last_response.body, 'Invalid Credentials')
+  end
+  
+  def test_signin_good_credentials
+    post '/users/signin', username: 'admin', password: 'secret'
+    assert_equal(302, last_response.status)
+    
+    get last_response["Location"]
+    assert_equal(200, last_response.status)
+    assert_includes(last_response.body, "Signed in as admin")
+  end
+  
+  def test_signout
+    post '/users/signin', username: 'admin', password: 'secret'
+    get last_response["Location"]
+    assert_includes(last_response.body, "Welcome")
+    
+    get '/users/signout'
+    assert_equal(302, last_response.status)
+    
+    get last_response["Location"]
+    assert_includes(last_response.body, "You have been signed out.")
+    assert_includes(last_response.body, "Sign In")
+  end
 end
