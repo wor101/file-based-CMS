@@ -36,6 +36,10 @@ class CMSTest < MiniTest::Test
     last_request.env["rack.session"]
   end
   
+  def admin_session
+    { "rack.session" => { username: "admin" } }
+  end
+  
   def test_index
     create_document("about.txt")
     create_document("changes.txt")
@@ -79,37 +83,38 @@ class CMSTest < MiniTest::Test
   
   def test_edit_file_content
     create_document("changes.txt")
-    
-    post '/changes.txt/update', edit_content: 'New pahty content'
+
+    post '/changes.txt/update', {edit_content: 'New pahty content'}, admin_session
     assert_equal(302, last_response.status)
     assert_equal('changes.txt has been updated.', session[:message])
-    #assert_includes(last_response.body, 'changes.txt has been updated.')
-    
+
     get '/changes.txt'
     assert_equal(200, last_response.status)
     assert_includes(last_response.body, 'New pahty content')
   end
   
   def test_new_document
-    get '/new_document'
+    get '/new_document', {}, admin_session
     assert_equal(200, last_response.status)
     assert_includes(last_response.body, 'Add a new document:')
   end
   
   def test_add_document_without_name
-    post '/new_document', name_document: ''
+    post '/new_document', {name_document: ''}, admin_session
+    
     assert_equal(302, last_response.status)
     assert_equal("A name is required.", session[:message])
   end
   
   def test_add_document_with_invalid_file_type
-    post '/new_document', name_document: 'no_file_type'
+    post '/new_document', {name_document: 'no_file_type'}, admin_session
+    
     assert_equal(302, last_response.status)
     assert_equal("File name must end in .txt or .md", session[:message])
   end
   
   def test_add_valid_document
-    post '/new_document', name_document: 'valid_doc.md'
+    post '/new_document', {name_document: 'valid_doc.md'}, admin_session
     assert_equal(302, last_response.status)
 
     get last_response["Location"]
@@ -119,8 +124,8 @@ class CMSTest < MiniTest::Test
   
   def test_delete
     create_document("doc_to_delete.md")
-    
-    post 'doc_to_delete.md/delete' 
+
+    post 'doc_to_delete.md/delete', {}, admin_session
     assert_equal(302, last_response.status)
     assert_equal("doc_to_delete.md has been deleted.", session[:message])
 

@@ -46,6 +46,16 @@ def valid_doc_name?(doc_name)
   end
 end
 
+def signed_in?
+session[:username] == nil ? false : true
+
+end
+
+def redirect_to_index
+  session[:message] = "You must be signed in to do that."
+  redirect '/' 
+end
+
 get '/' do
   @file_names = Dir.children(data_path)
 
@@ -53,6 +63,7 @@ get '/' do
 end
 
 get '/new_document' do
+  redirect_to_index unless signed_in?
   
   erb :new_document, layout: :layout
 end
@@ -73,6 +84,8 @@ get '/:file_name/edit' do
   file_name = params[:file_name]
   file_path = File.join(data_path, file_name)
   
+  redirect_to_index unless signed_in?
+
   if File.exist?(file_path)
     @content = load_file(file_path)
     
@@ -97,6 +110,8 @@ end
 
 post '/new_document' do
   doc_name = params[:name_document].strip
+  
+  redirect_to_index unless signed_in?
   
   if valid_doc_name?(doc_name) == false
     redirect 'new_document'
@@ -126,6 +141,8 @@ post '/:file_name/update' do
   file_name = params[:file_name]
   file_path = File.join(data_path, file_name)
 
+  redirect_to_index unless signed_in?
+
   if File.exist?(file_path)
     File.open(file_path, "w") { |f| f.write params[:edit_content] }
 
@@ -140,6 +157,8 @@ end
 post '/:file_name/delete' do
   file_name = params[:file_name]
   file_path = File.join(data_path, file_name)
+  
+  redirect_to_index unless signed_in?
   
   if File.exist?(file_path)
     File.delete(file_path)

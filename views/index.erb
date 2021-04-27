@@ -17,7 +17,7 @@
   <br>
   <br>
 
-<% if session[:signed_in] == true %>  
+<% if session[:username] %>  
   <form action="users/signout" method="get">
     <p class="user-status">
       Signed in as <%= session[:username] %>
