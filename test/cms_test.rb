@@ -169,4 +169,40 @@ class CMSTest < MiniTest::Test
     assert_nil(session[:username])
     assert_includes(last_response.body, "Sign In")
   end
+  
+  def test_visit_edit_page_when_signed_out
+    create_document('test_doc.txt')
+    
+    get '/test_doc.txt/edit'
+    assert_equal(302, last_response.status)
+    assert_equal("You must be signed in to do that.", session[:message])
+  end
+  
+  def test_udpate_document_when_signed_out
+    create_document('test_doc.txt')
+    
+    post '/test_doc.txt/update', edit_content: 'New pahty content'
+    assert_equal(302, last_response.status)
+    assert_equal("You must be signed in to do that.", session[:message])
+  end
+  
+  def test_visit_new_document_when_signed_out
+    get '/new_document'
+    assert_equal(302, last_response.status)
+    assert_equal("You must be signed in to do that.", session[:message])
+  end
+  
+  def test_create_new_document_when_signed_out
+    post '/new_document', name_document: 'test_doc.txt'
+    assert_equal(302, last_response.status)
+    assert_equal("You must be signed in to do that.", session[:message])  
+  end
+  
+  def test_delete_document_when_signed_out
+    create_document('test_doc.txt')
+    
+    post 'test_doc.txt/delete'
+    assert_equal(302, last_response.status)
+    assert_equal("You must be signed in to do that.", session[:message])  
+  end
 end
