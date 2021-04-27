@@ -18,9 +18,11 @@
   <br>
 
 <% if session[:signed_in] == true %>  
-  <p>Signed in as <%= session[:username] %></p>
   <form action="users/signout" method="get">
-    <button>Sign Out</button>
+    <p class="user-status">
+      Signed in as <%= session[:username] %>
+      <button>Sign Out</button>
+    </p>
   </form>
 <% else %>
 <form action="users/signin" method="get">
