@@ -58,7 +58,6 @@ end
 
 def signed_in?
 session[:username] == nil ? false : true
-
 end
 
 def redirect_to_index
@@ -80,6 +79,16 @@ def valid_credentials?(username, password)
   else
     false
   end
+end
+
+def duplicate_file(original_file_name, original_file_path)
+    original_file = File.open(original_file_path)
+    
+    File.new("#{data_path}/" + "copy_" + original_file_name, "w")
+    File.open("#{data_path}/" + "copy_" + original_file_name, "w") { |f| f.write original_file.read }
+    original_file.close
+    
+    session[:message] = "Duplicate of #{original_file_name} has been created."
 end
 
 get '/' do
@@ -148,23 +157,26 @@ post '/new_document' do
   end
 end
 
-post '/users/signin' do
-  #users = load_users
+post '/:file_name/duplicate' do
+  original_file_name = params[:file_name]
+  original_file_path = File.join(data_path, original_file_name)
   
+  if File.exist?(original_file_path)
+    duplicate_file(original_file_name, original_file_path)
+    redirect '/'
+  else
+    session[:message] = "#{original_file_name} does not exist."
+    redirect '/'
+  end
+end
+
+post '/users/signin' do
   if valid_credentials?(params[:username], params[:password])
-  #if users.keys.include?(params[:username]) && BCrypt::Password.new(users[params[:username]]) == params[:password]
     session[:username] = params[:username]
     session[:signed_in] = true
     
     session[:message] = 'Welcome!'
     redirect '/'
-  
-  # if params[:username] == 'admin' && params[:password] == 'secret'
-  #   session[:username] = params[:username]
-  #   session[:signed_in] = true
-    
-  #   session[:message] = 'Welcome!'
-  #   redirect '/'
   else
     session[:temp_user] = params[:username]
     session[:message] = "Invalid Credentials"
