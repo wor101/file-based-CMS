@@ -3,7 +3,7 @@ ENV["RACK_ENV"] = "test"
 require 'minitest/autorun'
 require 'rack/test'
 require 'fileutils'
-
+require 'bcrypt'
 
 require_relative '../cms'
 
@@ -210,7 +210,6 @@ class CMSTest < MiniTest::Test
     users = load_users
 
     assert_includes(users.keys, "Morgar")
-    assert_includes(users.values, "firebeard")
   end
   
 end
