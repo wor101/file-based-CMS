@@ -212,4 +212,15 @@ class CMSTest < MiniTest::Test
     assert_includes(users.keys, "Morgar")
   end
   
+  def test_duplicate_file
+    create_document("test_doc.txt")
+    
+    post 'test_doc.txt/duplicate'
+    assert_equal(302, last_response.status)
+    assert_equal("Duplicate of test_doc.txt has been created.", session[:message])
+    
+    get last_response["Location"]
+    assert_includes(last_response.body, "copy_test_doc.txt")
+  end
+  
 end
