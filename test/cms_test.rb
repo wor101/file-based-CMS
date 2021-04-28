@@ -205,4 +205,12 @@ class CMSTest < MiniTest::Test
     assert_equal(302, last_response.status)
     assert_equal("You must be signed in to do that.", session[:message])  
   end
+  
+  def test_load_users
+    users = load_users
+
+    assert_includes(users.keys, "Morgar")
+    assert_includes(users.values, "firebeard")
+  end
+  
 end

@@ -2,6 +2,7 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'tilt/erubis'
 require 'redcarpet'
+require 'yaml'
 
 configure do
   enable :sessions
@@ -34,6 +35,14 @@ def data_path
   end
 end
 
+def user_path
+  if ENV["RACK_ENV"] == "test"
+    File.expand_path("../test", __FILE__)
+  else
+    File.expand_path("..", __FILE__)
+  end
+end
+
 def valid_doc_name?(doc_name)
   if doc_name.empty?
     session[:message] = "A name is required."
@@ -54,6 +63,11 @@ end
 def redirect_to_index
   session[:message] = "You must be signed in to do that."
   redirect '/' 
+end
+
+def load_users
+  file_path = File.join(user_path + "/users.yaml")
+  YAML.load(File.read(file_path))
 end
 
 get '/' do
@@ -123,12 +137,22 @@ post '/new_document' do
 end
 
 post '/users/signin' do
-  if params[:username] == 'admin' && params[:password] == 'secret'
+  users = load_users
+  
+  
+  if users.keys.include?(params[:username]) && users[params[:username]] == params[:password]
     session[:username] = params[:username]
     session[:signed_in] = true
     
     session[:message] = 'Welcome!'
     redirect '/'
+  
+  # if params[:username] == 'admin' && params[:password] == 'secret'
+  #   session[:username] = params[:username]
+  #   session[:signed_in] = true
+    
+  #   session[:message] = 'Welcome!'
+  #   redirect '/'
   else
     session[:temp_user] = params[:username]
     session[:message] = "Invalid Credentials"
