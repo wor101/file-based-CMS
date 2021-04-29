@@ -27,3 +27,9 @@ Flumph: !ruby/string:BCrypt::Password
   cost: 12
   salt: "$2a$12$aZtohVK54D5TzSdsSH6Zk."
   checksum: CU7zgVZ7Pr4QBF.nrEgqLTsC8Ns3OU.
+Gob: !ruby/string:BCrypt::Password
+  str: "$2a$12$.VcY53lOWprfTP/tiiG1bukfsERGXZQ0Hf5Dkrml.dKyYYmuw6ek."
+  version: 2a
+  cost: 12
+  salt: "$2a$12$.VcY53lOWprfTP/tiiG1bu"
+  checksum: kfsERGXZQ0Hf5Dkrml.dKyYYmuw6ek.

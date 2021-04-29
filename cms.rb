@@ -61,6 +61,10 @@ def signed_in?
 session[:username] == nil ? false : true
 end
 
+def admin_rights?
+  session[:username] == "admin"
+end
+
 def redirect_to_index
   session[:message] = "You must be signed in to do that."
   redirect '/' 
@@ -249,8 +253,6 @@ post '/users/signin' do
   end
 end
 
-
-
 post '/users/register' do
   new_username = params[:username]
   new_password1 = params[:password1]  #neeed to BCrypt
@@ -267,7 +269,10 @@ end
 post '/users/pending/:user_name/approve' do
   pending_users = load_pending_users
   
-  if pending_users.include?(params[:user_name])
+  if !admin_rights?
+    session[:message] = "Unauthorized. Must be admin."
+    redirect '/'
+  elsif pending_users.include?(params[:user_name])
     add_user_to_approved(params[:user_name])
     remove_user_from_pending(params[:user_name])
     session[:message] = "#{params[:user_name]} has been approved."
@@ -281,7 +286,10 @@ end
 post '/users/pending/:user_name/reject' do
   pending_users = load_pending_users
   
-  if pending_users.include?(params[:user_name])
+  if !admin_rights?
+    session[:message] = "Unauthorized. Must be admin."
+    redirect '/'
+  elsif pending_users.include?(params[:user_name])
     remove_user_from_pending(params[:user_name])
     session[:message] = "#{params[:user_name]} has been rejected."
     redirect '/users/pending'
