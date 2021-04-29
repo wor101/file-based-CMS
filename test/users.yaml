@@ -3,4 +3,33 @@ admin: "$2a$12$xUkB6rnz3a.NGudb/3C6JeIIt3zlSPPWAlhMgGAg6jG7UOMDXfwVW"
 Morgar: "$2a$12$eqEy3IC06gGXMOhdIlTusemtD3tObfHY9OjzbMPCzjP0W7w7ojSxW"
 Theon: "$2a$12$HYXNxF82pcSRhx3k2EDHvueXyaricEzZDtxnXiYqJEHMaO05fT11C"
 Hardo: "$2a$12$yhu7UgwQT6uJrx58xO3jseTKOlUS3VWaNoM4UCZRCicvQDbFu742u"
-
+Rocky: !ruby/string:BCrypt::Password
+  str: "$2a$12$//IeiOEPNAjK5arlJo1me.GI576j8/QBRBjn9AnTTG55lm.lMiWM6"
+  version: 2a
+  cost: 12
+  salt: "$2a$12$//IeiOEPNAjK5arlJo1me."
+  checksum: GI576j8/QBRBjn9AnTTG55lm.lMiWM6
+Boston: !ruby/string:BCrypt::Password
+  str: "$2a$12$LkffUK5Wl5RIfFZt/ywYf.MlOuM4KKSu6QaJMElPugTdQxhgWOCBC"
+  version: 2a
+  cost: 12
+  salt: "$2a$12$LkffUK5Wl5RIfFZt/ywYf."
+  checksum: MlOuM4KKSu6QaJMElPugTdQxhgWOCBC
+Orc: !ruby/string:BCrypt::Password
+  str: "$2a$12$..xdHRy/UA8/MAXPC13vmuRYWxh0WrXDLqFpJrSZQNfJNboVGNJia"
+  version: 2a
+  cost: 12
+  salt: "$2a$12$..xdHRy/UA8/MAXPC13vmu"
+  checksum: RYWxh0WrXDLqFpJrSZQNfJNboVGNJia
+Flumph: !ruby/string:BCrypt::Password
+  str: "$2a$12$aZtohVK54D5TzSdsSH6Zk.CU7zgVZ7Pr4QBF.nrEgqLTsC8Ns3OU."
+  version: 2a
+  cost: 12
+  salt: "$2a$12$aZtohVK54D5TzSdsSH6Zk."
+  checksum: CU7zgVZ7Pr4QBF.nrEgqLTsC8Ns3OU.
+Gob: !ruby/string:BCrypt::Password
+  str: "$2a$12$.VcY53lOWprfTP/tiiG1bukfsERGXZQ0Hf5Dkrml.dKyYYmuw6ek."
+  version: 2a
+  cost: 12
+  salt: "$2a$12$.VcY53lOWprfTP/tiiG1bu"
+  checksum: kfsERGXZQ0Hf5Dkrml.dKyYYmuw6ek.

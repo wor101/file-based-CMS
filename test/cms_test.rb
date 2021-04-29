@@ -27,9 +27,23 @@ class CMSTest < MiniTest::Test
   
   end
   
+  def create_yaml(name, content = "")
+      File.open(File.join(user_path, name), "w") do |file|
+      file.write(content)
+    end 
+  end
+  
   def create_document(name, content = "")
     File.open(File.join(data_path, name), "w") do |file|
       file.write(content)
+    end
+  end
+  
+  def create_pending_users_yaml
+    create_yaml("pending_users.yaml", {})
+    pending_users = { "Owlbear" => "1234", "Dragon" => "5678" }
+    pending_users.each_pair do |username, password|
+      add_user_to_pending(username, password)
     end
   end
   
@@ -225,6 +239,7 @@ class CMSTest < MiniTest::Test
   end
   
   def test_register_new_user
+    create_pending_users_yaml
     post '/users/register', {username: "TestUser1", password1: "pass1", password2: "pass1" }
     assert_equal(302, last_response.status)
     assert_equal("TestUser1 has been submitted for approval.", session[:message])
@@ -235,6 +250,7 @@ class CMSTest < MiniTest::Test
   end
   
   def test_approve_new_user
+    create_pending_users_yaml
     post '/users/pending/Dragon/approve'
     
     pending_users = load_pending_users

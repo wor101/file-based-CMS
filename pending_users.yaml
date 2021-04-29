@@ -11,9 +11,4 @@ Dragon: !ruby/string:BCrypt::Password
   cost: 12
   salt: "$2a$12$MH.GPpl4MVojEiRy5Y0N2."
   checksum: q353AW1piJZPlZaeyBIv02F98JG/.a.
-Hydra: !ruby/string:BCrypt::Password
-  str: "$2a$12$eb20cxxUQYXgsFMPGNbbOOUb.pt2vGTQK1K0fCS94GGMMzSO9odzu"
-  version: 2a
-  cost: 12
-  salt: "$2a$12$eb20cxxUQYXgsFMPGNbbOO"
-  checksum: Ub.pt2vGTQK1K0fCS94GGMMzSO9odzu
+
