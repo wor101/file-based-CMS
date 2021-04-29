@@ -37,3 +37,9 @@
   <button>Register</button>
 </form>
 <% end %>
+
+<% if session[:username] == "admin" %>
+<form action="users/pending" method="get">
+  <button>Pending Registrations</button>
+</form>
+<% end %>

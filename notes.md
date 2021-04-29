@@ -11,3 +11,11 @@
 2. Form to submit password
   - need to enter twice and confirm same
   - need to encrypt with BCrypt
+  - 
+
+**Admin Only Page**
+1. Create new /users/pending.erb page that is only accessible by admin
+2. Display list of pending users
+3. add buttons to accept or reject
+  - accept button should add to users.yaml & delete from pending_users.yaml
+  - reject should delete from pending_users.yaml

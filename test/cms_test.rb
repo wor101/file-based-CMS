@@ -24,6 +24,7 @@ class CMSTest < MiniTest::Test
   
   def teardown
   FileUtils.rm_rf(data_path)
+  
   end
   
   def create_document(name, content = "")
@@ -221,6 +222,27 @@ class CMSTest < MiniTest::Test
     
     get last_response["Location"]
     assert_includes(last_response.body, "copy_test_doc.txt")
+  end
+  
+  def test_register_new_user
+    post '/users/register', {username: "TestUser1", password1: "pass1", password2: "pass1" }
+    assert_equal(302, last_response.status)
+    assert_equal("TestUser1 has been submitted for approval.", session[:message])
+    
+    pending_users = load_pending_users
+    assert_includes(pending_users.keys, "TestUser1")
+    remove_user_from_pending("TestUser1")
+  end
+  
+  def test_approve_new_user
+    post '/users/pending/Dragon/approve'
+    
+    pending_users = load_pending_users
+    users = load_users
+    
+    #assert_includes(users.keys, "Dragon") 
+    #refute_includes(pending_users.keys, "Dragon")
+    #Need to create and destroy users.yaml and pending_users.yaml in setup and teardown
   end
   
 end

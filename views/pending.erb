@@ -1,0 +1,18 @@
+<% if session[:message] %>
+  <h3 class="message"><%= session.delete(:message) %></h3>
+<% end %>
+
+<ul>
+  <% @pending_users.each_pair do |username, password|  %>
+    <li>
+      <p><%= username %></p>
+      <form class="inline" method="post" action="/users/pending/<%= username %>/approve">
+        <button type="submit">Approve</button>
+      </form>
+      <form class="inline" method="post" action="/users/pending/<%= username %>/reject">
+        <button type="submit">Reject</button>
+      </form>
+    </li>
+  
+  <% end %>
+</ul>

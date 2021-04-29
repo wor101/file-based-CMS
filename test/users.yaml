@@ -1,6 +1,6 @@
-{
-  admin: "$2a$12$xUkB6rnz3a.NGudb/3C6JeIIt3zlSPPWAlhMgGAg6jG7UOMDXfwVW" ,
-  Morgar: "$2a$12$eqEy3IC06gGXMOhdIlTusemtD3tObfHY9OjzbMPCzjP0W7w7ojSxW",
-  Theon: "$2a$12$HYXNxF82pcSRhx3k2EDHvueXyaricEzZDtxnXiYqJEHMaO05fT11C",
-  Hardo: "$2a$12$yhu7UgwQT6uJrx58xO3jseTKOlUS3VWaNoM4UCZRCicvQDbFu742u",
-}
+---
+admin: "$2a$12$xUkB6rnz3a.NGudb/3C6JeIIt3zlSPPWAlhMgGAg6jG7UOMDXfwVW"
+Morgar: "$2a$12$eqEy3IC06gGXMOhdIlTusemtD3tObfHY9OjzbMPCzjP0W7w7ojSxW"
+Theon: "$2a$12$HYXNxF82pcSRhx3k2EDHvueXyaricEzZDtxnXiYqJEHMaO05fT11C"
+Hardo: "$2a$12$yhu7UgwQT6uJrx58xO3jseTKOlUS3VWaNoM4UCZRCicvQDbFu742u"
+

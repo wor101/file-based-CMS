@@ -97,6 +97,53 @@ def duplicate_file(original_file_name, original_file_path)
     session[:message] = "Duplicate of #{original_file_name} has been created."
 end
 
+def valid_new_username?(new_username)
+  users = load_users
+  pending_users = load_pending_users
+  if users.keys.include?(new_username) || pending_users.keys.include?(new_username)
+    session[:requsted_user_name] = new_username
+    session[:message] = "#{new_username} is already an existing username."
+    false
+  else
+    session[:requsted_user_name] = new_username
+    session[:message] = "#{new_username} has been submitted for approval."
+    true
+  end
+end
+
+def valid_new_password?(new_password1, new_password2)
+  if new_password1 == new_password2
+    true
+  else
+    session[:message] = "Both passwords must match."
+    false
+  end
+end
+
+def add_user_to_pending(username, password)
+  bcrypt_password = BCrypt::Password.create(password)
+  
+  pending_users = load_pending_users
+  pending_users[username] = bcrypt_password
+  pending_users = YAML.dump(pending_users)
+  File.open(user_path + '/pending_users.yaml', "w") { |f| f.write pending_users }
+end
+
+def add_user_to_approved(username)
+  users = load_users
+  pending_users = load_pending_users
+  users[username] = pending_users[username]
+  users = YAML.dump(users)
+  File.open(user_path + '/users.yaml', "w") { |f| f.write users }
+end
+
+def remove_user_from_pending(username)
+  pending_users = load_pending_users
+  pending_users.delete(username)
+  pending_users = YAML.dump(pending_users)
+  File.open(user_path + '/pending_users.yaml', "w") { |f| f.write pending_users }
+end
+
 get '/' do
   @file_names = Dir.children(data_path)
 
@@ -154,6 +201,12 @@ get '/users/register' do
   erb :register, layout: :layout
 end
 
+get '/users/pending' do
+  @pending_users = load_pending_users
+
+  erb :pending, layout: :layout
+end
+
 post '/new_document' do
   doc_name = params[:name_document].strip
   
@@ -196,27 +249,7 @@ post '/users/signin' do
   end
 end
 
-def valid_new_username?(new_username)
-  users = load_users
-  if users.keys.include?(new_username) 
-    session[:requsted_user_name] = new_username
-    session[:message] = "#{new_username} is already an existing username."
-    false
-  else
-    session[:requsted_user_name] = new_username
-    session[:message] = "#{new_username} has been submitted for approval"
-    true
-  end
-end
 
-def valid_new_password?(new_password1, new_password2)
-  if new_password1 == new_password2
-    true
-  else
-    session[:message] = "Both passwords must match."
-    false
-  end
-end
 
 post '/users/register' do
   new_username = params[:username]
@@ -224,19 +257,37 @@ post '/users/register' do
   new_password2 = params[:password2]  #neeed to BCrypt
   
   if valid_new_username?(new_username) && valid_new_password?(new_password1, new_password2)
-    bcrypt_password = BCrypt::Password.create(new_password1)
-    file = File.open(user_path + '/pending_users.yaml', "r")
-    data_string = file.read
-    data = YAML.load(data_string)
-    data[new_username] = bcrypt_password
-    data = YAML.dump(data)
-    file.close
-    File.open(user_path + '/pending_users.yaml', "w") { |f| f.write data }
-
-    
-    redirect '/users/register'
+    add_user_to_pending(new_username, new_password1)
+    redirect '/'
   else
     redirect '/users/register'
+  end
+end
+
+post '/users/pending/:user_name/approve' do
+  pending_users = load_pending_users
+  
+  if pending_users.include?(params[:user_name])
+    add_user_to_approved(params[:user_name])
+    remove_user_from_pending(params[:user_name])
+    session[:message] = "#{params[:user_name]} has been approved."
+    redirect '/users/pending'
+  else
+    session[:message] = "#{params[:user_name]} is not pending approval."
+    redirect '/users/pending'
+  end
+end
+
+post '/users/pending/:user_name/reject' do
+  pending_users = load_pending_users
+  
+  if pending_users.include?(params[:user_name])
+    remove_user_from_pending(params[:user_name])
+    session[:message] = "#{params[:user_name]} has been rejected."
+    redirect '/users/pending'
+  else
+    session[:message] = "#{params[:user_name]} is not pending approval."
+    redirect '/users/pending'
   end
 end
 
