@@ -5,6 +5,7 @@ require 'redcarpet'
 require 'yaml'
 require 'bcrypt'
 
+
 configure do
   enable :sessions
   set :session_secret, 'secret'
@@ -67,6 +68,11 @@ end
 
 def load_users
   file_path = File.join(user_path + "/users.yaml")
+  YAML.load(File.read(file_path))
+end
+
+def load_pending_users
+  file_path = File.join(user_path + "/pending_users.yaml")
   YAML.load(File.read(file_path))
 end
 
@@ -143,6 +149,11 @@ get '/users/signout' do
   redirect '/'
 end
 
+get '/users/register' do
+  
+  erb :register, layout: :layout
+end
+
 post '/new_document' do
   doc_name = params[:name_document].strip
   
@@ -182,6 +193,50 @@ post '/users/signin' do
     session[:message] = "Invalid Credentials"
     status 422
     erb :signin
+  end
+end
+
+def valid_new_username?(new_username)
+  users = load_users
+  if users.keys.include?(new_username) 
+    session[:requsted_user_name] = new_username
+    session[:message] = "#{new_username} is already an existing username."
+    false
+  else
+    session[:requsted_user_name] = new_username
+    session[:message] = "#{new_username} has been submitted for approval"
+    true
+  end
+end
+
+def valid_new_password?(new_password1, new_password2)
+  if new_password1 == new_password2
+    true
+  else
+    session[:message] = "Both passwords must match."
+    false
+  end
+end
+
+post '/users/register' do
+  new_username = params[:username]
+  new_password1 = params[:password1]  #neeed to BCrypt
+  new_password2 = params[:password2]  #neeed to BCrypt
+  
+  if valid_new_username?(new_username) && valid_new_password?(new_password1, new_password2)
+    bcrypt_password = BCrypt::Password.create(new_password1)
+    file = File.open(user_path + '/pending_users.yaml', "r")
+    data_string = file.read
+    data = YAML.load(data_string)
+    data[new_username] = bcrypt_password
+    data = YAML.dump(data)
+    file.close
+    File.open(user_path + '/pending_users.yaml', "w") { |f| f.write data }
+
+    
+    redirect '/users/register'
+  else
+    redirect '/users/register'
   end
 end
 

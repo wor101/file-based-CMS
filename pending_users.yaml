@@ -1,0 +1,13 @@
+---
+Rocky: !ruby/string:BCrypt::Password
+  str: "$2a$12$oE/JGbG96tcO4wbxggi/I.5f0adzobWybt6Rqk/RQOUK.35qILRcu"
+  version: 2a
+  cost: 12
+  salt: "$2a$12$oE/JGbG96tcO4wbxggi/I."
+  checksum: 5f0adzobWybt6Rqk/RQOUK.35qILRcu
+Boston: !ruby/string:BCrypt::Password
+  str: "$2a$12$QeE5vcPl94PpaBFD4dpFtu/4lpM6rt4le0GP0CT9XPXZ8bOLv28Iu"
+  version: 2a
+  cost: 12
+  salt: "$2a$12$QeE5vcPl94PpaBFD4dpFtu"
+  checksum: "/4lpM6rt4le0GP0CT9XPXZ8bOLv28Iu"
