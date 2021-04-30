@@ -75,7 +75,7 @@ def load_users
 end
 
 def load_pending_users
-  file_path = File.join(user_path + "/pending_users.yaml")
+  file_path = File.join(user_path + '/pending_users.yaml')
   YAML.load(File.read(file_path))
 end
 
@@ -168,7 +168,7 @@ end
 
 get '/new_document' do
   redirect_to_index unless signed_in?
-  
+
   erb :new_document, layout: :layout
 end
 
@@ -210,7 +210,6 @@ get '/:file_name/edit' do
 end
 
 get '/users/signin' do
-
   erb :signin, layout: :layout
 end
 
@@ -222,7 +221,6 @@ get '/users/signout' do
 end
 
 get '/users/register' do
-
   erb :register, layout: :layout
 end
 
@@ -249,7 +247,7 @@ end
 post '/upload' do
   filename = params[:file][:filename]
   file = params[:file][:tempfile]
- 
+
   if valid_image_type?(filename)
     File.open("./public/#{filename}", 'wb') do |f|
       f.write(file.read)
