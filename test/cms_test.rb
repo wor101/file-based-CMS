@@ -261,4 +261,10 @@ class CMSTest < MiniTest::Test
     #Need to create and destroy users.yaml and pending_users.yaml in setup and teardown
   end
   
+  def test_access_uploads_without_signin
+    get '/upload'
+    assert_equal(302, last_response.status)
+    assert_equal("You must be logged in to upload files.", session[:message])
+  end
+  
 end

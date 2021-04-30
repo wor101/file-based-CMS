@@ -160,6 +160,15 @@ get '/new_document' do
   erb :new_document, layout: :layout
 end
 
+get '/upload' do 
+  if signed_in?
+    erb :upload, layout: :layout
+  else
+    session[:message] = "You must be logged in to upload files."
+    redirect '/'
+  end
+end
+
 get '/:file_name' do
   file_name = params[:file_name]
   file_path = File.join(data_path, file_name)
@@ -222,6 +231,29 @@ post '/new_document' do
     File.new("#{data_path}/" + "#{doc_name}", 'w')
     session[:message] = "#{doc_name} was created."
     redirect '/'
+  end
+end
+
+def valid_image_type?(filename)
+  image_formats = ['.tif', '.tiff', '.gif', '.png', '.jpeg', '.jpg', '.bmp']
+  image_formats.include?(File.extname(filename))
+end
+
+post '/upload' do
+
+  filename = params[:file][:filename]
+  file = params[:file][:tempfile]
+  
+  if valid_image_type?(filename)
+    File.open("./public/#{filename}", 'wb') do |f|
+      f.write(file.read)
+    end
+  
+    session[:message] = "#{filename} has been uploaded."
+    redirect '/'
+  else
+    session[:message] = "File must be a '.tif', '.tiff', '.gif', '.png', '.jpeg', '.jpg', or '.bmp'"
+    redirect '/upload'
   end
 end
 
