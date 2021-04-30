@@ -1,13 +1,13 @@
 ---
 Owlbear: !ruby/string:BCrypt::Password
-  str: "$2a$12$uxD0lRelqCI513fjpCqkS.gnD0n9X9ue8U65.NgpKdzI2a5fd3Obu"
+  str: "$2a$12$PhGKEbbJQi6/balmIE.kheV7Zkj.9.InjYTsAMlfxvFZWtwVRxGua"
   version: 2a
   cost: 12
-  salt: "$2a$12$uxD0lRelqCI513fjpCqkS."
-  checksum: gnD0n9X9ue8U65.NgpKdzI2a5fd3Obu
+  salt: "$2a$12$PhGKEbbJQi6/balmIE.khe"
+  checksum: V7Zkj.9.InjYTsAMlfxvFZWtwVRxGua
 Dragon: !ruby/string:BCrypt::Password
-  str: "$2a$12$ulmFihr.QwIeHUqBkNddUOb44xnW1.uFG2V7//8.zklxIq7LqDbyi"
+  str: "$2a$12$HIgkgW3YNpqrsCGuIJO4cO2Qu8aki..JPGCBr0Gv9U9LEJrmQGoQ2"
   version: 2a
   cost: 12
-  salt: "$2a$12$ulmFihr.QwIeHUqBkNddUO"
-  checksum: b44xnW1.uFG2V7//8.zklxIq7LqDbyi
+  salt: "$2a$12$HIgkgW3YNpqrsCGuIJO4cO"
+  checksum: 2Qu8aki..JPGCBr0Gv9U9LEJrmQGoQ2
