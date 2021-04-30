@@ -267,4 +267,10 @@ class CMSTest < MiniTest::Test
     assert_equal("You must be logged in to upload files.", session[:message])
   end
   
+  def test_access_uploads_signed_in
+    get '/upload', {}, admin_session
+    assert_equal(200, last_response.status)
+  end
+  
+  
 end

@@ -148,6 +148,20 @@ def remove_user_from_pending(username)
   File.open(user_path + '/pending_users.yaml', "w") { |f| f.write pending_users }
 end
 
+def valid_image_type?(filename)
+  image_formats = ['.tif', '.tiff', '.gif', '.png', '.jpeg', '.jpg', '.bmp']
+  image_formats.include?(File.extname(filename))
+end
+
+def create_new_version(original_file_name, original_file_path)
+    original_file = File.open(original_file_path)
+    time_date = Time.now.strftime "%Y-%m-%d %H:%M:%S"
+    
+    File.new("#{data_path}/" + time_date + "_" + original_file_name, "w")
+    File.open("#{data_path}/" + time_date + "_" + original_file_name, "w") { |f| f.write params[:edit_content]}
+    original_file.close
+end
+
 get '/' do
   @file_names = Dir.children(data_path)
 
@@ -232,11 +246,6 @@ post '/new_document' do
     session[:message] = "#{doc_name} was created."
     redirect '/'
   end
-end
-
-def valid_image_type?(filename)
-  image_formats = ['.tif', '.tiff', '.gif', '.png', '.jpeg', '.jpg', '.bmp']
-  image_formats.include?(File.extname(filename))
 end
 
 post '/upload' do
@@ -335,10 +344,12 @@ post '/:file_name/update' do
   file_name = params[:file_name]
   file_path = File.join(data_path, file_name)
 
+
   redirect_to_index unless signed_in?
 
   if File.exist?(file_path)
-    File.open(file_path, "w") { |f| f.write params[:edit_content] }
+    create_new_version(file_name, file_path)
+    # File.open(file_path, "w") { |f| f.write params[:edit_content] }
 
     session[:message] = "#{file_name} has been updated."
     redirect '/'
